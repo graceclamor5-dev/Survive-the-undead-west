@@ -1,0 +1,165 @@
+import random
+import time
+
+# -------------------------------
+# HELP AND INFO TEXTS
+# -------------------------------
+HELP_TEXT = """
+====================================================================
+                               HELP
+====================================================================
+
+STORY
+The Wild West is overrun by zombies: Runners, Normals, Bombers, Tankers,
+Igniters, and Outlaws. Survive, craft weapons, set traps, and fight 
+to endure up to 999 nights.
+
+TUTORIAL
+- Shoot zombies and set traps to survive.
+- Jump, crouch, and sprint to avoid damage (stamina 100).
+- Collect materials and coins for crafting or buying ammo/guns.
+- Watch zombie types carefully:
+    * Runner: fast, low HP, high damage
+    * Normal: standard zombie
+    * Bomber: explodes on contact
+    * Tanker: high HP, huge damage, knockback
+    * Igniter: throws fire bottles; fire burns over time
+    * Outlaw: shoots until ammo is empty; can charge and infect
+- Multiplayer: join clans or teams. Friendly fire is enabled.
+- Achievements unlock automatically as you survive nights.
+
+CONTROLS
+PC:
+  Shoot       : 'shoot'
+  Craft       : 'T'
+  Crouch      : 'C'
+  Jump        : 'J'
+  Sprint      : 'WW' or 'sprint'
+  Buy         : 'B'
+  Help/Info   : 'help' or 'info'
+
+Mobile:
+  [1] Shoot
+  [2] Craft
+  [3] Crouch
+  [4] Jump
+  [5] Sprint
+  [6] Buy
+  [7] Help/Info
+====================================================================
+"""
+
+INFO_TEXT = """
+====================================================================
+                               INFO
+====================================================================
+
+ACHIEVEMENTS
+FIRST_KILL      : Kill your first zombie
+NIGHT_OWL       : Survive 100 nights
+TAKE_A_SHOWER   : Survive 999 nights
+TRAPMASTER      : Kill zombies using traps
+MUSKET_MASTER   : Craft and use a musket
+
+GAME MECHANICS
+- Player HP: 100
+- Stamina: 100 (for sprinting/jumping)
+- Ammo: found in chests or houses
+- Guns: Revolver, Rifle, Shotgun, Musket (musket unlocks at night 150)
+- Materials: used for crafting traps or special weapons
+- Stores: buy ammo, guns, and materials (closed at night)
+- Traps: kill zombies when set properly
+
+ANTI-CHEAT SYSTEM
+- Cheating triggers warnings, kick, or ban.
+- First offense: warning.
+- Second offense: kicked.
+- Third offense: banned permanently.
+
+MULTIPLAYER & TEAMS
+- Join clans or raids.
+- Friendly fire is enabled.
+- Watch for teamkill, idle, or cheating for kick/ban.
+
+COMMAND-LINE / CONSOLE USAGE
+- shoot      : attack zombies
+- craft      : open crafting table
+- buy        : open store
+- jump       : movement
+- crouch     : movement
+- sprint     : movement (stamina cost)
+- help/info  : view guides
+====================================================================
+"""
+
+# -------------------------------
+# PLAYER AND GAME VARIABLES
+# -------------------------------
+player_hp = 100
+stamina = 100
+ammo = 10
+materials = 0
+coins = 10
+night = 1
+
+zombie_types = ["Runner", "Normal", "Bomber", "Tanker", "Igniter", "Outlaw"]
+
+# -------------------------------
+# GAME LOOP
+# -------------------------------
+def game_loop():
+    global night, player_hp, stamina, ammo, materials, coins
+    print("Welcome to WILD WEST ZOMBIE SURVIVAL!")
+    print("Type 'help' or 'info' to see guides.\n")
+    
+    while player_hp > 0 and night <= 999:
+        print(f"\n--- Night {night} ---")
+        zombies = random.choices(zombie_types, k=random.randint(1,5))
+        print(f"Zombies appearing: {', '.join(zombies)}")
+        
+        action = input("Enter command: ").lower()
+        
+        if action in ["help"]:
+            print(HELP_TEXT)
+        elif action in ["info"]:
+            print(INFO_TEXT)
+        elif action in ["shoot"]:
+            if ammo > 0:
+                ammo -= 1
+                print("You shot a zombie! Ammo left:", ammo)
+            else:
+                print("Out of ammo!")
+        elif action in ["t", "craft"]:
+            print("Crafting table opened! Materials:", materials)
+        elif action in ["b", "buy"]:
+            print("Store opened! Coins:", coins)
+        elif action in ["c", "crouch"]:
+            print("You crouch to reduce damage.")
+        elif action in ["j", "jump"]:
+            print("You jump to dodge attacks.")
+        elif action in ["ww", "sprint", "sprint"]:
+            if stamina >= 10:
+                stamina -= 10
+                print("You sprint! Stamina left:", stamina)
+            else:
+                print("Not enough stamina!")
+        else:
+            print("Unknown command. Type 'help' or 'info'.")
+        
+        # Simulate zombie attack
+        damage = random.randint(5,20)
+        player_hp -= damage
+        print(f"Zombies attack! You took {damage} damage. HP left: {player_hp}")
+        
+        # Regenerate stamina
+        stamina = min(stamina+5, 100)
+        night += 1
+        time.sleep(1)
+    
+    print("\nGame Over. Thanks for playing!")
+
+# -------------------------------
+# START GAME
+# -------------------------------
+if __name__ == "__main__":
+    game_loop()
